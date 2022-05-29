@@ -17,5 +17,6 @@ SEAPE and SpLiT-ChEC analysis with R (SCAR) are intended to support rigorous, re
 - Assessing and applying available information from complex NGS and -omics datasets
 - Characterizing chromatin organization patterns in SpLiT-ChEC-seq data
 - Defining relationships between identifiable features of chromatin organization and various measurable outputs (RNA expression, protein-DNA binding site occupancy, DNA shape, proximity to functional DNA sequence features, ?)
+- Combining DNA sequences and sequence related features identified by NGS/-omics data to model protein-DNA interactions and binding site chromatin structure using machine learning algorithms and/or deep learning techniques. This could be used to predict how similar a recovered dataset is for a perturbed system or mutated protein, allowing rapid detection of genes/chromatin structure elements that are impacted.
 
 Ultimately, I hope to apply skills from building SpLiT-ChEC-seq, SCAR, and SEAPE to help design, build, and implement technologies that improve or expand therapeutic and diagnostic tools tackling challenging diseases in modern society.
