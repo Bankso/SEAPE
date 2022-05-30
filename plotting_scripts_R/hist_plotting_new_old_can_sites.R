@@ -4,22 +4,13 @@ library(forcats)
 
 in_ff <- in_ff
 in_sf <- in_sf
-
-merge_set <- list(2,4,6,8,10,12,14,16,18,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,1000)
-
 tf <- read.delim(file = in_ff, sep = '\t', header = FALSE, fill = TRUE)
 ts <- read.delim(file = in_sf, sep = '\t', header = FALSE, fill = TRUE)
+tf$V1 <- as.factor(tf$V1)
+ts$V1 <- as.factor(ts$V1)
 
-tf_t <- data.frame(t(tf))
-ts_t <- data.frame(t(ts))
-colnames(tf_t) <- merge_set
-colnames(ts_t) <- merge_set
-
-tf_tidy <- gather(tf_t, cols, value, factor_key=TRUE)
-ts_tidy <- gather(ts_t, cols, value, factor_key=TRUE)
-
-ggplot(ts_tidy, aes(x=value, after_stat(prop))) +
-	stat_count(aes(color=cols), position="dodge2")
+ggplot(tf, aes(x=V2, after_stat(prop))) +
+	stat_count(aes(color=V1), position="dodge2")
 
 #aes(color=cols)
 #x=forcats::fct_infreq(factor(value, order=TRUE))
