@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-name=$1
+dyads=$1
 set=$2
 frag=$3
 

@@ -8,7 +8,8 @@ import sys
 name = sys.argv[1]
 set = sys.argv[2]
 peak_type = sys.argv[3]
-sizes = list(sys.argv[4:])
+strand = as.logical(sys.argv[4])
+sizes = list(sys.argv[5:])
 
 dyads_dir = str(name + '/merging_analysis/' + set + '/raw_dyads/')
 adj_dir = str(name + '/merging_analysis/'  + set + '/unmerged_footprints/')
@@ -42,7 +43,9 @@ for s in sizes:
 			adj_bed.write(a_v)
 			adj_bed.write('\t')
 			adj_bed.write(e[3])
-			adj_bed.write('\n')
+			if strand == TRUE:
+				
+adj_bed.write('\n')
 	adj_bed.close
 	file.close
 
