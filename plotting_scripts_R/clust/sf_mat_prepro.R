@@ -1,15 +1,15 @@
 #This processes SF binding signal into a scaled matrix with the bed entries
 #Requires a list of three matrices from timepoints of SpLiT-ChEC small frag signal
 #Be sure to enter dimensions
-#Final output is an elbow plot. Data frames built in this program are used by rel_data_clustering.R
+#Data frames built in this program are used by rel_data_clustering.R
 
 matlist <- input_list
-nfrsize <- nfr_size
+regsize <- region_size
 cval <- mat_center
 
-nfr1 <- cval - (nfrsize/2)
-nfr2 <- cval + (nfrsize/2)
-nfr <- c(nfr1:nfr2)
+reg1 <- as.character(cval - (regsize/2))
+reg2 <- as.character(cval + (regsize/2))
+nfr <- c(reg1:reg2)
 
 trimlist <- mtrim(matlist, nfr)
 

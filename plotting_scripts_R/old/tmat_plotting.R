@@ -1,11 +1,8 @@
 #Output is average signal for three matrices overlayed on the same plot
 #Recommend order of signal plotting be adjusted to make scales work
 
-overlay_plot <- function(matlist, center, ymin, ymax) {
-matlist <- matlist
-rsize <- center
-ymax <- ymax
-ymin <- ymin
+matlist <- mat_list
+rsize <- 500
 t1c = "black"
 t2c = "blue"
 t3c = "red"
@@ -25,9 +22,7 @@ pl_df <- (data.frame(x, t1_v, t2_v, t3_v))
 
 
 
-
-plot(pl_df$x, pl_df$t1_v, type="l", col=t1c, ylim=c(ymin, ymax))
-lines(pl_df$x, pl_df$t2_v, col=t2c)
+plot(pl_df$x, pl_df$t2_v, type="l", col=t2c)
+lines(pl_df$x, pl_df$t1_v, col=t1c)
 lines(pl_df$x, pl_df$t3_v, col=t3c)
 
-}

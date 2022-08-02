@@ -9,12 +9,6 @@ matlist <- input_list
 maxlist <- max_list
 p <- FALSE
 
-trimlist <- Abf1_mtrim(matlist)
-vals <- trimlist[[2]]
-names <- trimlist[[1]]
-raw_binding <- lapply(vals, rowMeans)
-matinfo <- lapply(raw_binding, describe)
-nmat <- do.call(rbind, names)
 mermat <- mscaler(raw_binding, maxlist) #scale each matrix by a pre-set max value
 #mermat[mermat < 0] <- 0 #Trim the ends of the values to fit within 0/1
 #mermat[mermat > 1] <- 1
@@ -35,7 +29,7 @@ wss <- (nrow(rmat)-1)*sum(apply(rmat,2,var))
 for (i in 2:20) wss[i] <- sum(kmeans(rmat, centers=i)$withinss)
 plot_out <- plot(1:20, wss, type="b", xlab="Number of clusters", ylab="Within groups sum of squares")
 
-km_rc = KMeans_rcpp(rmat, clusters = 6, num_init = 5, max_iters = 100, 
+km_rc = KMeans_rcpp(rmat, clusters = 6, num_init = 5, max_iters = 100,
 										initializer = 'kmeans++', verbose = F)
 pr = predict(km_rc, newdata = rmat)
 
