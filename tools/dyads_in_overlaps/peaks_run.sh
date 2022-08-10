@@ -11,7 +11,7 @@
 #SBATCH --account=mcknightlab       		### Account used for job submission
 
 ## Be sure to edit the above to fit your HPC job submisssion framework
-## For example of output structure, see the README at https://github.com/Bankso/DIO
+## For example of output structure, see the README at https://github.com/Bankso/SEAPE
 ## Usage: sbatch run.sh 1 2 3 4
 ## Requires 4 inputs at the command line:
 		## First input - peak set directory with three BED formatted raw peak files derived from SpLiT-ChEC or other datasets
@@ -27,6 +27,8 @@
 ## err and log files are moved to the raw dyads directory after processing
 
 module load bedtools
+module load miniconda
+conda activate dio
 
 indir="$1" #Directory containing three peak sets from three timepoints for the same factor relative to wdir
 wdir="$2" #The name of the home directory for processing files, same as used for SCAR
