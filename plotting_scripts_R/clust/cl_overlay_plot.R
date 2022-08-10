@@ -1,27 +1,26 @@
-#Output is average signal for three matrices overlayed on the same plot
-#Recommend order of signal plotting be adjusted to make scales work
 library(dplyr)
 library(ggplot2)
 
 cl_overlay_plot <- function(matlist, cluster, time, split, clv) {
-	if (cluster == 'lf') {cv <- 6}
+	if (cluster == 'lf') {cv <- 8}
 	if (cluster == 'sf') {cv <- 1}
-
+	time <- as.character(time)
 	matlist <- matlist
 	split = as.logical(split)
 	spv <- clv
 	df_list <- lapply(matlist, read.delim, sep = '\t', header = FALSE)
-	tdf_list <- lapply(df_list, na.omit)
+	tdf_list <- lapply(df_list, function(x) {x <- x[-1, ]})
+	tdf_list[is.na(tdf_list)] <- 0
 
-	t1 <- data.frame(tdf_list[[1]][-1, -(0:6)])
-	t2 <- data.frame(tdf_list[[2]][-1, -(0:6)])
-	t3 <- data.frame(tdf_list[[3]][-1, -(0:6)])
+	t1 <- data.frame(tdf_list[[1]][, -(0:6)])
+	t2 <- data.frame(tdf_list[[2]][, -(0:6)])
+	t3 <- data.frame(tdf_list[[3]][, -(0:6)])
 
 	x <- c(1:1000)
 
-	t1c <- cbind(infomat[-1, cv], t1)
-	t2c <- cbind(infomat[-1, cv], t2)
-	t3c <- cbind(infomat[-1, cv], t3)
+	t1c <- cbind(infomat[cv], t1)
+	t2c <- cbind(infomat[cv], t2)
+	t3c <- cbind(infomat[cv], t3)
 
 	colnames(t1c) <- c("clust", x)
 	colnames(t2c) <- c("clust", x)
@@ -41,7 +40,7 @@ cl_overlay_plot <- function(matlist, cluster, time, split, clv) {
 	if (time == '3') {tpsmat <- t3cpmat}
 
 	ggplot(tpsmat, aes(bp, avgsig))+
-		geom_line(aes(colour = as.factor(clust), group=as.factor(clust), alpha=0.5), position = position_dodge2(width=1000))+
+		geom_line(aes(colour = as.factor(clust), group=as.factor(clust), alpha=0.5))+
 		xlab("Distance from center (bp)")+
 		ylab("Signal")
 	#ggsave('lprsplitlf_tss.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
@@ -52,5 +51,4 @@ cl_overlay_plot <- function(matlist, cluster, time, split, clv) {
 			geom_line(aes(colour = as.factor(clust), group=as.factor(clust), alpha=0.5))+
 			xlab("Distance from center (bp)")+
 			ylab("Signal")}
-
 }

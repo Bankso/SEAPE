@@ -17,7 +17,7 @@ ns_overlay_plot <- function(matlist, center, ymin, ymax) {
 	t2 <- data.frame(tdf_list[[2]][-1, -(0:5)])
 	t3 <- data.frame(tdf_list[[3]][-1, -(0:5)])
 
-	x <- c(-(rsize - 1):rsize) # Range of basepairs used for plotting, default is 1000bp regions
+	x <- as.numeric(c(-(rsize - 1):rsize)) # Range of basepairs used for plotting
 	t1_v <- colMeans(t1)
 	t2_v <- colMeans(t2)
 	t3_v <- colMeans(t3)

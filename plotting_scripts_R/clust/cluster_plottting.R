@@ -1,10 +1,7 @@
 library(ggplot2)
 library(dplyr)
-library(ClusterR)
 library(tsne)
 library(BSDA)
-
-make_map <- FALSE #build x,y and TSNE maps based on cluster annotations?
 
 #Combining cluster data and timepoint intensities for each consensus sequence
 #Takes lmat and smat as inputs
@@ -18,6 +15,7 @@ ggplot(lmat, aes(lpr))+
 	theme_bw()+
 	xlab("LF cluster ID")+
 	ylab("Number of sites in cluster")
+
 ggsave('tsslfcounts.tiff', device = 'tiff', units = 'cm', width = 5, height = 7, dpi = 300)
 
 #Number of sites in each SF cluster
@@ -26,6 +24,7 @@ ggplot(smat, aes(spr))+
 	theme_bw()+
 	xlab("SF cluster ID")+
 	ylab("Number of sites in cluster")
+
 ggsave('tsssfcounts.tiff', device = 'tiff', units = 'cm', width = 5, height = 7, dpi = 300)
 
 #contains all LF points with Sf cluster annotations
@@ -44,18 +43,20 @@ ggplot(infomat, aes(x = lpr, fill = factor(V5)))+
 	geom_bar()+
 	theme_bw()+
 	xlab("LF cluster ID")+
-	ylab("Number of sites in cluster")+
-
+	ylab("Number of sites in cluster")
 
 ggsave('lfcounts_mm.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
+
 #Plot SF clusters counts, bars colored with counts of +/- mm
 ggplot(infomat, aes(x = spr, fill = factor(V5)))+
 	geom_bar()+
 	theme_bw()+
 	xlab("SF cluster ID")+
 	ylab("Number of sites in cluster")
+
 ggsave('sfcounts_mm.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
-#Plotting SF timepoint signal by SF cluster - plot 2 out of 3 or subtract to reduce dimensions
+
+#Plotting SF timepoint signal by SF cluster - using 2 timepoints
 ggplot(smat, aes(t2, t3, colour = spr), alpha = 0.25)+
 	geom_count(alpha = 0.5)+
 	theme_bw()+
@@ -83,15 +84,18 @@ ggsave('mmslf.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi
 #SF signal with MM annotations
 smomat <- cbind(as.factor(infomat[, 'V5']), smat[,-(0:1)])
 colnames(smomat) <- c('motif', 't1', 't2', 't3')
-ggplot(smomat, aes(motif, t3))+
+
+ggplot(smomat, aes(motif, t1, t2, t3))+
 	geom_boxplot()+
 	theme_bw()
 
-z.test(dat1$sample1, dat1$sample2, alternative = "two.sided", mu = 0, sigma.x = 1, sigma.y = 1, conf.level = 0.95) #compare means between two groups of measurements
-
 #MM summarized SF signal
-spmmat <- smomat %>% group_by(motif) %>% summarise_all(mean,na.rm=T)
+mmmat <- smomat %>% filter(motif == 1)
+nmmat <- smomat %>% filter(motif == 0)
+spmmat <- pmmat %>% summarise_all(mean,na.rm=T)
 spsmat <- pivot_longer(spmmat, cols = !motif, names_to = 'time', values_to = 'avgsig')
+
+
 
 ggplot(spsmat, aes(motif, avgsig, color=time, fill=time, group=motif))+
 	geom_point(aes(), position=position_dodge2(preserve = 'total', width = 2))+
@@ -99,8 +103,8 @@ ggplot(spsmat, aes(motif, avgsig, color=time, fill=time, group=motif))+
 	scale_fill_manual(values = c('black', 'blue', 'red'))+
 	scale_color_manual(values = c('black', 'blue', 'red'))+
 	theme_bw()+
-	xlab("Target sequence type")+
-	ylab("Average signal across target sequences")
+	xlab("Target sequence group")+
+	ylab("Average region signal")
 
 ggsave('mm_sf_traj.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
 
@@ -108,8 +112,9 @@ ggsave('mm_sf_traj.tiff', device = 'tiff', units = 'cm', width = 10, height = 10
 ggplot(smomat, aes(t2, t3, colour = motif), alpha = 0.25)+
 	geom_count(alpha = 0.5)+
 	theme_bw()+
-	xlab("20s average target region signal")+
-	ylab("60s average target region signal")
+	xlab("20s average region signal")+
+	ylab("60s average region signal")
+
 ggsave('mm_sf_points.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
 
 #LPR summarized LF signal
@@ -120,6 +125,7 @@ ggplot(plmat, aes(bp, count))+
 	geom_line(aes(colour = lpr, group=lpr, alpha=0.5), position = position_dodge2(width=1000))+
 	xlab("Distance from center (bp)")+
 	ylab("Signal")
+
 ggsave('lprsplitlf_tss.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
 
 #LPR summarized LF signal zoom in
@@ -130,6 +136,7 @@ ggplot(tplmat, aes(bp, count))+
 	geom_line(aes(colour = lpr, group=lpr, alpha=0.5), position = position_dodge2(width=200))+
 	xlab("Distance from center (bp)")+
 	ylab("Signal")
+
 ggsave('lprsplitlf_200_tss.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
 
 #SPR summarized LF signal
@@ -140,7 +147,9 @@ ggplot(splmat, aes(group = spr, x = bp, y= count, colour = spr, alpha = 0.5))+
 	geom_line(position = position_dodge2(width = 1000))+
 	xlab("Distance from center (bp)")+
 	ylab("Signal")
+
 ggsave('sprsplitlf.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
+
 #SPR summarized SF signal
 asmat <- smat %>% group_by(spr) %>% summarise_all(mean,na.rm=T)
 psmat <- pivot_longer(asmat, cols = !spr, names_to = 'time', values_to = 'avgsig')
@@ -151,8 +160,9 @@ ggplot(psmat, aes(spr, avgsig, color=time, fill=time, group=spr))+
 	scale_fill_manual(values = c('black', 'blue', 'red'))+
 	scale_color_manual(values = c('black', 'blue', 'red'))+
 	theme_bw()+
-	xlab("Small fragment cluster ID")+
-	ylab("Average signql across target sequences")
+	xlab("SF cluster ID")+
+	ylab("Average region signal")
+
 ggsave('sprsplitsf_tss.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
 
 #LPR summarized SF signal
@@ -165,19 +175,10 @@ ggplot(lpsmat, aes(lpr, avgsig, color=time, fill=time, group=lpr))+
 	scale_fill_manual(values = c('black', 'blue', 'red'))+
 	scale_color_manual(values = c('black', 'blue', 'red'))+
 	theme_bw()+
-	xlab("Long fragment cluster ID")+
-	ylab("Average signql across target sequences")
+	xlab("LF cluster ID")+
+	ylab("Average region signal")
+
 ggsave('lprsplitsf_tss.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
-
-#Plotting LF signal in single or groups of LF clusters
-lfspdf <- plmat %>% filter(lpr == '9') #set number to the group(s) you want to plot
-
-ggplot(lfspdf, aes(x = bp, y = count, color = as.factor(lpr), group = as.factor(lpr)))+
-	geom_line(aes())+
-	xlab("Distance from center (bp)")+
-	ylab("Signal")
-ggsave('lpr5lf_tss.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
-
 
 #Plotting cluster annotations as x,y pairs
 ggplot(infomat, aes(X1, X2, colour = after_stat(prop)))+
@@ -187,6 +188,8 @@ ggplot(infomat, aes(X1, X2, colour = after_stat(prop)))+
 	xlim(1, 3)+
 	ylim(1, 3)
 
+
+make_map <- FALSE #build x,y and TSNE maps based on cluster annotations?
 if (make_map == TRUE) {
 #TSNE mapping of all input regions based on cluster annotations used as x,y pairs
 #Doesn't show anything different than plot above for 2-D data

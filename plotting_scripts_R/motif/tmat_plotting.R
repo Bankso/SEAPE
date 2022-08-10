@@ -17,15 +17,13 @@ t1 <- data.frame(tdf_list[[1]][-1, -(0:6)])
 t2 <- data.frame(tdf_list[[2]][-1, -(0:6)])
 t3 <- data.frame(tdf_list[[3]][-1, -(0:6)])
 
-x <- c(-(rsize - 1):rsize) # Range of basepairs used for plotting, default is 1000bp regions
+x <- c(-(rsize - 1):rsize) # Range of basepairs used for plotting
 t1_v <- colMeans(t1)
 t2_v <- colMeans(t2)
 t3_v <- colMeans(t3)
 pl_df <- (data.frame(x, t1_v, t2_v, t3_v))
 
-
-
-
+par(mar = c(5, 4, 4, 4) + 0.25)
 plot(pl_df$x, pl_df$t1_v, type="l", col=t1c, ylim=c(ymin, ymax))
 lines(pl_df$x, pl_df$t2_v, col=t2c)
 lines(pl_df$x, pl_df$t3_v, col=t3c)
