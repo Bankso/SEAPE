@@ -58,7 +58,7 @@ ggplot(lplmat, aes(reorder(bp, order), count, colour=motif, group = motif))+
 	geom_line()+
 	xlab("Distance from center (bp)")+
 	ylab("Signal")+
-	scale_x_discrete(labels = c(-500, 0, 500), breaks = c(1, 501, 1000))+
+	scale_x_discrete(labels = c(-500, 0, 500), breaks = c(1, 500, 1000))+
 	theme_bw()
 
 #ggsave('mmslf.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
@@ -95,11 +95,11 @@ ggplot(smomat, aes(`20s`, `60s`, colour = motif), alpha = 0.25)+
 
 #LF cluster summarized LF signal
 ggplot(plmat, aes(reorder(bp, order), count))+
-	geom_line(aes(colour = `LF cluster`, group=`LF cluster`, alpha = 0.5))+
+	geom_line(aes(colour = `LF cluster`, group=`LF cluster`))+
 	xlab("Distance from center (bp)")+
 	ylab("Signal")+
 	theme_bw()+
-	scale_x_discrete(labels = c(-500, 0, 500), breaks = c(1, 501, 1000))
+	scale_x_discrete(labels = c(-500, 0, 500), breaks = c(1, 500, 1000))
 
 
 #ggsave('lprsplitlf.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
@@ -110,7 +110,7 @@ ggplot(tplmat, aes(reorder(bp, order), count))+
 	xlab("Distance from center (bp)")+
 	ylab("Signal")+
 	theme_bw()+
-	scale_x_discrete(labels = c(-100, 0, 100), breaks = c(1, 100, 201))
+	scale_x_discrete(labels = c(-100, 0, 100), breaks = c(1, 100, 200))
 
 #ggsave('lprsplitlf_200_tss.tiff', device = 'tiff', units = 'cm', width = 10, height = 10, dpi = 300)
 

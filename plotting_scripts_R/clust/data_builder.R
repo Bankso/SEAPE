@@ -1,25 +1,40 @@
 library(dplyr)
 library(tidyverse)
+library(ClusterR)
 
+#Perform clustering on small fragment and long fragment data
 #Build various data frames for plotting
-#Requires pre-processed matrices from the base SEAPER pipeline
+#Requires pre-processed matrices from the base SEAPER pipeline: lfdata and sfscaled
 
-lmat <- cl_lf_df #pre-processed and clustered LF data
-smat <- cl_sf_df #pre-processed and clustered SF data
-strand <- FALSE #strand info is present
+strand <- TRUE #strand info is present
 prng <- factor(1:1000, levels=1:1000)
 zrng <- factor(400:600, levels=400:600) #range to plot zoomed in LF
 ztrm <- 400:600
+ncs <- 6 #optimal k value based on SF signal elbow plotting
+ncl <- 8 #optimal k value based on LF signal elbow plotting
 
-if (strand) {
+if (strand) { #6 bed entries plus the cluster values
 	rng <- (0:7)
 	ub <- 7
-	}
+}
 
-if (!strand) {
+if (!strand) { #5 bed entries plus the cluster values
 	rng <- (0:6)
 	ub <- 6
 }
+
+#SF per basepair signal clustering across timepoints
+skm_rc = KMeans_rcpp(sfscaled, clusters = ncs, num_init = 5, max_iters = 100, initializer = 'optimal_init', verbose = F)
+spr = predict(skm_rc, newdata = sfscaled)
+cl_sf_df <- cbind(as.factor(spr), scbinddf) #cluster annotations added to matrix
+
+#LF single timepoint clustering
+lkm_rc = KMeans_rcpp(lfdata, clusters = ncl, num_init = 5, max_iters = 100, initializer = 'optimal_init', verbose = F)
+lpr = predict(lkm_rc, newdata = lfdata)
+cl_lf_df <- cbind(as.factor(lpr), lfinfo, lfdata) #cluster annotations added to matrix
+
+lmat <- cl_lf_df #pre-processed and clustered LF data
+smat <- cl_sf_df #pre-processed and clustered SF data
 
 #LF points with Sf cluster annotations
 slfmat <- cbind(as.factor(smat[, 1]), lmat[, -(rng)])
